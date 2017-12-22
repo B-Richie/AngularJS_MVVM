@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+@section scripts{
+    <script src="~/ArtistClient.js"></script>
+
+    <script>
+        $(function () {
+            $('body').on('click', '.tog span', function () {
+                if ($(this).text() == '+') {
+                    $(this).text('-');
+                }
+                else {
+                    $(this).text('+');
+                }
+                $(this).closest('tr').next('tr').toggle()
+            });
+        });
+    </script>
+}
+
+
+<div ng-app="ArtistApp" class="container">
+    <br />
+    <br />
+    <input type="text" placeholder="Search Artists" ng-model="searchArtists" />
+    <br />
+    <br />
+    <div ng-controller="ArtistController">
+        <table class="tableData">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>
+                        <a href="#" ng-click="sortBy = 'ArtistID'; reverse = !reverse">
+                            <span class="sortOrder" ng-show="sortBy == 'ArtistID'" ng-class="{reverse:reverse}"></span>
+                            Artist ID
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" ng-click="sortBy = 'ArtistName'; reverse = !reverse">
+                            <span class="sortOrder" ng-show="sortBy == 'ArtistName'" ng-class="{reverse: reverse}"></span>
+                            Artist Name
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="a in artists | filter: searchArtists | orderBy: sortBy:reverse">
+                <tr>
+                    <td class="tog"><span>+</span></td>
+                    <td>
+
+                        {{a.ArtistID}}
+                    </td>
+                    <td>
+                        {{a.ArtistName}}
+                    </td>
+                </tr>
+                <tr class="child">
+                    <td></td>
+                    <td colspan="4">
+                        <table class="tableData">
+                            <tr>
+                                <th></th>
+                                <th>
+                                    <a href="#" ng-click="sortBy = 'AlbumName'; reverse = !reverse">
+                                        <span class="sortOrder" ng-show="sortBy == 'AlbumName'" ng-class="{reverse:reverse}"></span>
+                                        Album Name
+                                    </a>
+                                </th>
+                                <th>Number of Tracks</th>
+                                <th>Release Year</th>
+                                <th>Genre</th>
+                            </tr>
+                            <tbody id="albumBody" ng-repeat="l in a.Albums | orderBy: sortBy:reverse">
+                                <tr ng-class-even="even" ng-class-odd="odd">
+                                    <td class="tog"><span>+</span></td>
+                                    <td>
+                                        {{l.AlbumName}}
+                                    </td>
+                                    <td>
+                                        {{l.NumberOfTracks}}
+                                    </td>
+                                    <td>{{l.ReleaseYear}}</td>
+                                    <td>{{l.Genre}}</td>
+                                </tr>
+                                <tr class="child">
+                                    <td></td>
+                                    <td colspan="3">
+                                        <table class="tableData" border="0" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <th>Tracks</th>
+                                            </tr>
+                                            <tr ng-repeat="t in l.Tracks">
+                                                <td>{{t.TrackName}}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
